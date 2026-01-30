@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    container_name: matter-management-db
+    environment:
+      POSTGRES_USER: matter
+      POSTGRES_PASSWORD: matter
+      POSTGRES_DB: matter_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U matter -d matter_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - matter-network
+
+  # Database seed service (runs once)
+  seed:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    container_name: matter-management-seed
+    environment:
+      DATABASE_URL: postgres://matter:matter@postgres:5432/matter_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - matter-network
+    restart: "no"
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: matter-management-backend
+    environment:
+      DATABASE_URL: postgres://matter:matter@postgres:5432/matter_db
+      PORT: 3000
+      NODE_ENV: production
+      SLA_THRESHOLD_HOURS: 8
+      LOG_LEVEL: info
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      seed:
+        condition: service_completed_successfully
+    networks:
+      - matter-network
+    restart: unless-stopped
+
+  # Frontend React app
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3000/api/v1
+    container_name: matter-management-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - matter-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  matter-network:
+    driver: bridge
+

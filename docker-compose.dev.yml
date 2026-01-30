@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    container_name: matter-management-db-dev
+    environment:
+      POSTGRES_USER: matter
+      POSTGRES_PASSWORD: matter
+      POSTGRES_DB: matter_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U matter -d matter_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - matter-network-dev
+
+  # Database seed service (runs once)
+  seed:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    container_name: matter-management-seed-dev
+    environment:
+      DATABASE_URL: postgres://matter:matter@postgres:5432/matter_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - matter-network-dev
+    restart: "no"
+
+  # Backend API (development mode with hot reload)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: builder
+    container_name: matter-management-backend-dev
+    environment:
+      DATABASE_URL: postgres://matter:matter@postgres:5432/matter_db
+      PORT: 3000
+      NODE_ENV: development
+      SLA_THRESHOLD_HOURS: 8
+      LOG_LEVEL: debug
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/src:/app/src
+    command: npm run dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+      seed:
+        condition: service_completed_successfully
+    networks:
+      - matter-network-dev
+    restart: unless-stopped
+
+  # Frontend React app (development mode with hot reload)
+  frontend:
+    image: node:18-alpine
+    container_name: matter-management-frontend-dev
+    working_dir: /app
+    environment:
+      VITE_API_URL: http://localhost:3000/api/v1
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev -- --host"
+    depends_on:
+      - backend
+    networks:
+      - matter-network-dev
+    restart: unless-stopped
+
+volumes:
+  postgres_data_dev:
+    driver: local
+
+networks:
+  matter-network-dev:
+    driver: bridge
+
