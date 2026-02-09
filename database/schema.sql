@@ -48,6 +48,7 @@ CREATE TABLE ticketing_fields (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     account_id INTEGER NOT NULL REFERENCES accounts(account_id),
     name VARCHAR(255) NOT NULL,
+    -- CALUM: Should be a state table
     field_type VARCHAR(50) NOT NULL CHECK (field_type IN ('text', 'number', 'select', 'date', 'currency', 'boolean', 'status', 'user')),
     description TEXT,
     metadata JSONB,
@@ -106,6 +107,7 @@ CREATE TABLE ticketing_currency_field_options (
 );
 
 -- Ticketing tickets (matters)
+-- CALUM: Should be called ticketing_tickets, doesn't match the rest of the conventions
 CREATE TABLE ticketing_ticket (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     board_id UUID NOT NULL REFERENCES ticketing_board(id),
@@ -124,10 +126,17 @@ CREATE TABLE ticketing_ticket_field_value (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     -- Value columns for different field types
+    -- CALUM: Thank god it's not a single field we are in business for easier indexing
+    -- CALUM: One thing you can do here, is seperate these into seperate tables per type and have just the ids here
+    -- CALUM: This can result in smaller index sizes, but the performance implications are complex... however of the top of my head if you are doing meta queries that don't need to read / serialize values reads could be faster
+    -- CALUM: You can also encapsulate these in a JSONB column and indexes the types fields of that, wouldn't necessarily make things faster or slower. Indexing would work the same way
+    -- CALUM: GIN indexes / ...BUT are status enum values stored here to? If they are simple checks we want to create a status_value column with different indexing strategy
     text_value TEXT,
+    -- CALUM: Same thing
     string_value VARCHAR(255),
     number_value NUMERIC,
     date_value TIMESTAMP WITH TIME ZONE,
+    -- CALUM: Indexing is already free
     user_value INTEGER REFERENCES users(id),
     boolean_value BOOLEAN,
     currency_value JSONB, -- {amount: number, currency: string}

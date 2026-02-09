@@ -4,7 +4,7 @@ import { Field, StatusGroup } from '../../types.js';
 export class FieldsRepo {
   async getAllFields(accountId: number): Promise<Field[]> {
     const client = await pool.connect();
-    
+
     try {
       const fieldsResult = await client.query(
         `SELECT id, account_id, name, field_type, description, metadata, system_field
@@ -73,7 +73,7 @@ export class FieldsRepo {
 
   async getStatusGroups(accountId: number): Promise<StatusGroup[]> {
     const client = await pool.connect();
-    
+
     try {
       const result = await client.query(
         `SELECT id, name, sequence
@@ -95,7 +95,7 @@ export class FieldsRepo {
 
   async getCurrencyOptions(accountId: number) {
     const client = await pool.connect();
-    
+
     try {
       const result = await client.query(
         `SELECT id, code, name, symbol, sequence
@@ -119,4 +119,3 @@ export class FieldsRepo {
 }
 
 export default FieldsRepo;
-

@@ -34,7 +34,15 @@ export interface StatusValue {
   groupName: string;
 }
 
-export type FieldType = 'text' | 'number' | 'select' | 'date' | 'currency' | 'boolean' | 'status' | 'user';
+export type FieldType =
+  | 'text'
+  | 'number'
+  | 'select'
+  | 'date'
+  | 'currency'
+  | 'boolean'
+  | 'status'
+  | 'user';
 
 export interface CycleTime {
   resolutionTimeMs: number | null;
@@ -102,4 +110,3 @@ export interface CycleTimeHistory {
   toStatusId: string;
   transitionedAt: Date;
 }
-
