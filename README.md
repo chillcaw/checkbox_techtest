@@ -6,13 +6,19 @@ With a performance first mindset, I have implemented some features in a way that
 
 Most of my ramblings and thought process can be found in my `/calum` directory. I've created a document for each task, key points, as well as the SQL file I was using for my investigations [SQL Notes](/calum/FULL_SPEC.sql)
 
+# Key metrics
+
+- Initial full spec query time: 200ms+
+- Final full spec query time: 20ms (+900% performance improvement)
+- To get an idea of the query analysis you can look here: [EXPLAIN ANALYZE Notes](/calum/FINAL_QUERY_ANALYSIS.md)
+
 # Documentation and Notes
 
-[1. SLA Task](/calum/1_SLA_DOCS.md)
-[2. Sorting Task](calum/2_SORTING_DOCS.md)
-[3. Search Task](calum/3_SEARCH_DOCS.md)
-[4. Testing](calum/4_TESTING_DOCS.md)
-[5. Scalability](calum/5_SCALABILITY_DOCS.md)
+- [1. SLA Task](/calum/1_SLA_DOCS.md)
+- [2. Sorting Task](/calum/2_SORTING_DOCS.md)
+- [3. Search Task](/calum/3_FUZZYSEARCH_DOCS.md)
+- [4. Testing](/calum/4_TESTING_DOCS.md)
+- [5. Scalability](/calum/5_SCALABILITY_DOCS.md)
 
 # Matter Management System - Take-Home Assessment
 
