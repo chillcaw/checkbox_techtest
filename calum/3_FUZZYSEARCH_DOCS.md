@@ -228,9 +228,9 @@ LIMIT $${++paramIndex} OFFSET $${++paramIndex}
 
 ## Potentially severe issue with this query
 
-4 types of indexes when postgres might not use the right indexes.
+With 4 types of indexes, postgres might not use the right indexes.
 The main issue is that the postgres query planner is going to find it difficult to estimate the resultant set sizes of each index when using %% like clauses and
-may resort to full scans sometimes.
+may resort to full scans.
 
 ```sql
 ttfv.search_vector @@ plainto_tsquery('simple', $${paramIndex})
@@ -271,17 +271,17 @@ This also optimises OFFSET queries because we can now do them with where clauses
 We could just add a "search_value" column that holds a stringified lowercased version of the real searchable value.
 
 This removes the need to concatenated indexes, and allows us to create a single GIN trigram index on that column.
-We could get away with not needed to use lower(column) in the search clause as well.
+We could get away with not needing to use lower(column) in the search clause as well.
 
 ## Materialized Views (bad idea for this use case)
 
-Not the magic bullet everyone thinks they are, they require refreshes, often full refreshes, and can be slow to refresh depending on the dataset size.
+Not the magic bullet, they require refreshes, often full refreshes, and can be slow to refresh depending on the dataset size.
 We actually want to refresh single rows as they are created / updated, which is not what materialized views are designed for.
 
 ## Incremental updates to a search_value column
 
 ```sql
--- Trigger psuedo code written by hand
+-- Trigger pseudo code written by hand
 ALTER TABLE ticketing_ticket_field_value
 ADD COLUMN search_value TEXT;
 

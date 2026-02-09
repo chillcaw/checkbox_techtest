@@ -60,8 +60,8 @@ date is a great candidate for partitioning, but a terrible candidate for data di
 It's impossible to suggest good distributions without knowing the data access patterns and how heavy each one is.
 
 A suggestion I could give would be account_id based distribution, assuming most queries are scoped to a single account, with date partitioning.
-Keep in mind, if there are huge disparities between number of records per account or queries per account this could lead to hotspots and performance hits for small accounts that have done nothing wrong.
-^^ A couple of big accounts could affect the performance of the entire DB cluster.
+Keep in mind, if there are huge disparities between number of records per account or queries per account, this could lead to hotspots and performance hits for small accounts that have done nothing wrong.
+A couple of big accounts could affect the performance of the entire DB cluster.
 
 There are other things to consider like cross shard joins, distributed transactions etc. These are out of scope for this document. This is a tech test in of itself.
 
@@ -73,7 +73,7 @@ Good candidates for query caching are tables that are read from a lot, but don't
 
 - E.g: account info, user info, state tables
 
-We could also split the getMatters query and cache the matter ids for query parameter queries for a short period of time.
+We could also split the getMatters query and cache the matter IDs for query parameter queries for a short period of time.
 
 ## Application scaling
 

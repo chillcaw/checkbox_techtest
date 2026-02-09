@@ -20,14 +20,14 @@ My opinion: materialized views are good for snapshotting datasets for later anal
 They are not designed for high frequency updates, and refreshing them can be expensive because every update requires a rebuild or you end up with a schedule where records are stale for a period of time. Postgres can optimize incremental refreshes, but it's still not as real time and "light weight" as triggers.
 
 **Why not use generated columns?**
-We can, if things get any more complex we won'tto use generated columns. I would rather use triggers instead of generated columns for flexibility.
+We can, if things get any more complex we won't use generated columns. I would rather use triggers instead of generated columns for flexibility.
 If we want to change how our indexes are proactively built, we can just update the trigger function instead of having to drop and recreate the generated columns (danger).
 
 **CDC vs Batch**
 Think of triggers as a CDC approach and materialized views as a batch approach.
 
 **Cons of triggers**
-Hard to maintain (sometimes), usually people say this when they don't have much experience with them. The real reason reason is triggers don't do away with the initial refresh problem, you still need to backfill existing data every time you change the logic.
+Hard to maintain (sometimes), usually people say this when they don't have much experience with them. The real reason is triggers don't do away with the initial refresh problem, you still need to backfill existing data every time you change the logic.
 
 Luckily we can just do benign updates to force triggers to run again. And these queries can be run every schema update:
 

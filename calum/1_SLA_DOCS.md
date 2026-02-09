@@ -10,7 +10,7 @@ We want to enrich our data with a human readable SLA status.
     - **"In Progress"**: Not yet complete
     - **"Met"**: Resolved ≤ 8 hours
     - **"Breached"**: Resolved > 8 hours
-- Format durations human-readable (e.g., "2h 30m", "3d 5h")'
+- Format durations human-readable (e.g., "2h 30m", "3d 5h")
 
 ### Approach
 
