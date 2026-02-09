@@ -1,3 +1,11 @@
+# Docs
+
+I was told to document my thought process and approach to the tech test, so I have created a folder called `/calum` where I have documented my approach to each task, as well as some of the research and investigations I did while working on the tech test. This includes SQL files with my notes and queries that I used to investigate different approaches to the tasks.
+
+Before writing any code or reading the task I also did a blind code review of the codebase to get a feel for the code and to see if there were any obvious issues or areas for improvement that I could address while working on the tasks. I have documented some of my thoughts from this review in the relevant task docs. [Pull Request Review Notes](https://github.com/chillcaw/checkbox_techtest/pull/1)
+
+Note that this review was a first pass review, I didn't have much context and I didn't dig deep into the requirements for the tech test yet. I just wanted to get my initial thoughts, no matter how silly, down on paper before I started working on the tasks.
+
 # Focus And Priority
 
 For this tech test I was instructed to focus on query optimisation, and so most of my time was spent optimising the main getMatters query.
@@ -19,6 +27,8 @@ Most of my ramblings and thought process can be found in my `/calum` directory. 
 - [3. Search Task](/calum/3_FUZZYSEARCH_DOCS.md)
 - [4. Testing](/calum/4_TESTING_DOCS.md)
 - [5. Scalability](/calum/5_SCALABILITY_DOCS.md)
+- [Schema Changes](/calum/SCHEMA.sql)
+- [AI Tool Usage](/calum/AI_DISCLOSURE.md)
 
 # Matter Management System - Take-Home Assessment
 

@@ -27,7 +27,7 @@ If we want to change how our indexes are proactively built, we can just update t
 Think of triggers as a CDC approach and materialized views as a batch approach.
 
 **Cons of triggers**
-Hard to maintain (sometimes), usually people say this when they don't have much experience with them. The real reason is triggers don't do away with the initial refresh problem, you still need to backfill existing data every time you change the logic.
+Hard to maintain (sometimes). The real reason is triggers don't do away with the initial refresh problem, you still need to backfill existing data every time you change the logic.
 
 Luckily we can just do benign updates to force triggers to run again. And these queries can be run every schema update:
 

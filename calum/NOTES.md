@@ -17,8 +17,7 @@ case 'text':
 
 This should really be handled in the service layer, as display value in particular is business logic.
 
-The reason I didn't build these in the service layer, is because I didn't want to create a whole file worth of types for the tech test that
-represent the flat unhydrated data coming from the db, in the time I had this felt like too much work.
+The reason I didn't build this out this the service layer, is it would require defining Raw DB records types that are returned from the repo. I also opted to do it in the repo because from a glance it looks like field parsing is already being handled in repo methods. Though if I had more time I would consider field parsing business logic and move it to the service layer.
 
 ### Cycle time and SLA calculation
 
@@ -35,7 +34,7 @@ One way around this would have been to return undefined for both SLA and cycleTi
 Why am I doing my own hydration?
 Mostly so I can get away with a single query. I saw that the app was already using pg directly, and I wanted to demonstrate that I can work with whatever libraries you give me access to and still get a good result.
 
-Realistically you'd want to pull in libraries like knex/micro-orm that have built-in hydration and query building capabilities, but for the sake of the tech test I only needed to hydrate one query result or roll your own standard for hydration. The reason I didn't create a standard hydrate function is because hydration standards are hard to define, require a lot of edge case handling, and loads of documentation for the team using them.
+Realistically you'd want to pull in libraries like knex/micro-orm that have built-in hydration and query building capabilities, but for the sake of the tech test I only needed to hydrate one query result. You could roll your own standard for hydration. The reason I didn't create a standard hydrate function is because hydration standards are hard to define, require a lot of edge case handling, and loads of documentation for the team using them.
 
 I felt like this was out of scope for the tech test, but in a production app I would want to have a standard for how we handle hydration and data parsing across the entire app.
 
